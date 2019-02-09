@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .sidebar-menu li:hover{
+          background-color:rgb(100, 100, 100) ;
+        }
+      </style>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Attendance App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!-- <script src="main.js"></script> -->
+</head>
+<body>
+  <style>
+    body{
+      overflow-x: hidden;
+    }
+    #fixed-nav-bar{
+      position: sticky;
+      top: 0px;
+      background-color: #3a3f48;
+    }
+    .modal-content{
+      border: none;
+    }
+  </style>
+        <nav id="fixed-nav-bar" class="navbar navbar-expand-xl navbar-dark">
+          <div class="container">
+                <a class="navbar-brand" href="#">Absent-Present</a>
+                {% if 'user' in session and 'pass' in session %}
+                <button type="button" id="modal-btn" class="btn" data-toggle="modal" data-target=".bd-example-modal-lg">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                {% else %}
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="#">HOME<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">HELP</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">ABOUT US</a>
+                    </li>
+                    {% if login %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path }}">{{ login }}</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Login</a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+              </nav>
+
+
+{% with messages = get_flashed_messages(with_categories = true) %}
+{% if messages %}
+{% for category,msg in messages %}
+    <div class="alert alert-{{category}} alert-dismissible text-center fade show" role="alert">
+  <strong>{{ msg }}</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+{% endfor %}      
+{% endif %}
+<div id="modal-sm">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/dashboard.css') }}">
+    <!-- Large modal -->
+  
+  
+  <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        
+          <div class="page-wrapper chiller-theme toggled">
+              <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                <i class="fas fa-bars"></i>
+              </a>
+              <nav id="sidebar" class="sidebar-wrapper flex-row">
+                <div class="sidebar-content">
+                  <div class="sidebar-brand">
+                    <a href="#">USER DETAILS</a>
+                    <div id="close-sidebar">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                  <div class="sidebar-header">
+                    <div class="user-pic">
+                      <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+                        alt="User picture">
+                    </div>
+                    <div class="user-info">
+                      <span class="user-name">
+                        {{ session['user'] }}
+                      </span>
+                      <span class="user-role">Administrator</span>
+                    </div>
+                  </div>
+                  <!-- sidebar-header  -->
+                  
+                  <!-- sidebar-search  -->
+                  <div class="sidebar-menu">
+                    <ul>
+                      <li>
+                        <a href="#" class="nav-link">RECENT</a>
+                      </li>
+                      <li>
+                        <a href="#" class="nav-link">STUDENTS</a>
+                      </li>
+                      <li>
+                        <a href="/attendance" class="nav-link">ATTENDANCE</a>
+                      </li>
+                      <li>
+                          <a href="/createclass" class="nav-link">CREATE CLASS</a>
+                      </li>
+                      <li>
+                          <a href="#" class="nav-link">UPDATE STUDENTS</a>
+                        </li>
+                      {% if 'user' in session %}
+                      <li>
+                        <a href="/logout" class="nav-link">LOGOUT</a>
+                      </li>
+                      {% endif %}
+                      <li>
+                        <a href="#" class="nav-link">ABOUTUS</a>
+                      </li>
+                      <li>
+                        <a href="#" class="nav-link">HELP</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- sidebar-menu  -->
+                </div>
+                <!-- sidebar-content  -->
+                
+              </nav>
+              <!-- sidebar-wrapper  -->
+              
+              <!-- page-content" -->
+            </div>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endwith %}
+
+{% block body %}
+
+{% endblock %}
+
+</body>
+</html>
