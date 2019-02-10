@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__)
 app.secret_key = 'Very Secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./databases/root.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////./databases/root.db'
 db = SQLAlchemy(app)
 
 # Loading config.json as params
