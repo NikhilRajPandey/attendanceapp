@@ -4,17 +4,18 @@ import json
 
 app = Flask(__name__)
 app.secret_key = 'Very Secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////./databases/root.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./databases/root.db'
 db = SQLAlchemy(app)
 
 # Classes or Table for Website
 class Classes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    classname = db.Column(db.String(20), unique=True, nullable=False)
+    classname = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(120), nullable=False)
 
     def __repr__(self):
-        return '<Class %r>' % self.classname
+        return f'<Class {classname}'
+
 
 class Students(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +32,7 @@ class Attendance(db.Model):
     date = db.Column(db.String(80), nullable=False)
 
     def __repr__(self):
-        return '<Student %r>' % self.date
+        return '<Date %r>' % self.date
 
 # Loading config.json as params
 with open('config.json','r') as file:
@@ -52,6 +53,20 @@ def home():
     if check_session():
         return render_template('admin.html',webname=params['websitename'])
     return render_template('index.html',webname=params['websitename'])
+
+@app.route('/createclass',methods=['GET','POST'])
+def create_class():
+    if check_session():
+        if request.method == 'POST':
+            classname = request.form.get('classname')
+            description = request.form.get('description')
+
+            insertdata = Classes(classname=classname,description=description)
+            db.session.add(insertdata)
+            db.session.commit()
+    
+        return render_template('createclass.html',webname=params['websitename'])
+    return redirect('/')
 
 # Login Route
 @app.route('/login',methods=['GET','POST'])

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container">
+    <h1>Here You can Make Your Class</h1>
+    <form action="/createclass" class="form-group" method="post">
+        <label>Your Class Name</label>
+        <input type="text" name="classname" class="form-control">
+        <label>Description</label>
+        <textarea class="form-control" name="description"></textarea>
+        <br>
+        <input type="submit" name="submit" class="btn btn-primary" value="submit">
+
+    </form>
+    <p>If you have already have a class then go to your class from <a href="/attendance">here</a></p>
+</div>
+
+{% endblock %}
