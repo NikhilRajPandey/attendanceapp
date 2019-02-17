@@ -7,11 +7,37 @@ app.secret_key = 'Very Secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////./databases/root.db'
 db = SQLAlchemy(app)
 
+# Classes or Table for Website
+class Classes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    classname = db.Column(db.String(20), unique=True, nullable=False)
+    description = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return '<Class %r>' % self.classname
+
+class Students(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    studentname = db.Column(db.String(80), nullable=False)
+    classname = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return '<Student %r>' % self.studentname
+    
+class Attendance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    studentname = db.Column(db.String(80), nullable=False)
+    classname = db.Column(db.String(120), nullable=False)
+    date = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self):
+        return '<Student %r>' % self.date
+
 # Loading config.json as params
 with open('config.json','r') as file:
     params = json.load(file)
 
-# Checking User in session or not 
+# Checking User in session or not
 def check_session():
     if 'user' in session and 'pass' in session:
         if session['user'] == params['username'] and session['pass'] == params['password']:
